@@ -6,41 +6,44 @@ public class SnakeandLadderSimulator {
 
     public static void main(String[] args) {
         System.out.println("Welcome to Snake and Ladder Simulator");
-        int position = 0;
-        int roll = 0;
+        int[] positions = { 0, 0 };
+        int currentPlayer = 0;
 
-        while (position != WINNING_POSITION) {
+        while (true) {
             int die = rollDie();
-            roll++;
             int option = getOption();
 
             switch (option) {
                 case LADDER:
-                    if (position + (die * 2) <= WINNING_POSITION) {
-                        position += die * 2;
+                    if (positions[currentPlayer] + (die * 2) <= WINNING_POSITION) {
+                        positions[currentPlayer] += die * 2;
+                        System.out.println("Player " + (currentPlayer + 1) + " climbed a ladder and plays again.");
+                        continue;
                     }
-                    System.out.print("LADDER ");
                     break;
                 case SNAKE:
 
-                    System.out.print("SNAKE ");
-                    if (position < 0) {
-                        position = 0;
+                    if (positions[currentPlayer] < 0) {
+                        positions[currentPlayer] = 0;
                     }
                     break;
                 case NO_PLAY:
-                    if (position + die <= WINNING_POSITION) {
-                        position += die;
+                    if (positions[currentPlayer] + die <= WINNING_POSITION) {
+                        positions[currentPlayer] += die;
                     }
-                    System.out.print("NO PLAY ");
                     break;
             }
 
-            System.out.println("Die: " + die + ", Position: " + position);
-        }
+            System.out.println(
+                    "Player " + (currentPlayer + 1) + " rolled " + die + ", Position: " + positions[currentPlayer]);
 
-        System.out.println("Game won! Reached exactly at position 100.");
-        System.out.println("Total number of times the dice was rolled: " + roll);
+            if (positions[currentPlayer] == WINNING_POSITION) {
+                System.out.println("Player " + (currentPlayer + 1) + " wins!");
+                break;
+            }
+
+            currentPlayer = 1 - currentPlayer;
+        }
     }
 
     private static int rollDie() {
